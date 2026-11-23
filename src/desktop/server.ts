@@ -112,8 +112,8 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, '127.0.0.1', () => {
   console.log(`====================================================`);
-  console.log(`🚀 Antigravity Context Meter 数据流服务已就绪！`);
-  console.log(`👉 悬浮胶囊界面: http://127.0.0.1:${PORT}/capsule`);
-  console.log(`👉 完整面板界面: http://127.0.0.1:${PORT}`);
+  console.log(`🚀 Antigravity Context Meter server is ready!`);
+  console.log(`👉 Floating Capsule UI: http://127.0.0.1:${PORT}/capsule`);
+  console.log(`👉 Full Panel UI:       http://127.0.0.1:${PORT}`);
   console.log(`====================================================`);
 });

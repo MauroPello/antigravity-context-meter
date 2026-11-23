@@ -25,12 +25,12 @@ export class LogWatcher {
       {
         path: path.join(home, '.gemini', 'antigravity', 'brain'),
         source: 'desktop',
-        label: '桌面端',
+        label: 'Desktop',
       },
       {
         path: path.join(home, '.gemini', 'antigravity-ide', 'brain'),
         source: 'ide',
-        label: 'IDE端',
+        label: 'IDE',
       },
     ];
   }
@@ -69,7 +69,7 @@ export class LogWatcher {
                 id: dir,
                 source: base.source,
                 sourceLabel: base.label,
-                title: title || `会话 ${dir.slice(0, 8)}`,
+                title: title || `Session ${dir.slice(0, 8)}`,
                 lastModified: logStat.mtimeMs,
                 lastUpdatedStr: new Date(logStat.mtimeMs).toLocaleTimeString(),
                 logPath,
@@ -110,7 +110,7 @@ export class LogWatcher {
         } catch {}
       }
     } catch {}
-    return '未命名会话';
+    return 'Untitled Session';
   }
 
   /**
@@ -212,7 +212,7 @@ export class LogWatcher {
             id: `user_${stepIndex}`,
             stepIndex,
             type: 'user_input',
-            name: `用户提问 (轮次 #${turnCount})`,
+            name: `User Prompt (Turn #${turnCount})`,
             rawContent: contentStr,
             timestamp: time,
           });
@@ -263,7 +263,7 @@ export class LogWatcher {
             id: `tool_${stepIndex}`,
             stepIndex,
             type: 'tool_output',
-            name: `工具输出 (${type})`,
+            name: `${type}`,
             rawContent: contentStr,
             timestamp: time,
           });
@@ -291,14 +291,14 @@ export class LogWatcher {
     const recentObjectives = userObjectives.slice(-3);
 
     const migrationPrompt = ContextSummarizer.generateMigrationPrompt({
-      projectName: convTitle || '当前项目',
+      projectName: convTitle || 'Current Project',
       modelName: spec.displayName,
       totalTokens: FastTokenizer.formatTokenCount(totalUsed),
       userObjectives: recentObjectives,
       modifiedFiles,
       recentDecisions: [
-        `会话已交互 ${turnCount} 轮，累计占用 ${percentage}% 上下文空间`,
-        `分布: System (${FastTokenizer.formatTokenCount(systemRulesTokens)}), MCP (${FastTokenizer.formatTokenCount(skillsMcpTokens)}), Messages (${FastTokenizer.formatTokenCount(messagesTokens)}), Tool Outputs (${FastTokenizer.formatTokenCount(toolOutputsTokens)})`,
+        `Session has ${turnCount} turn(s), using ${percentage}% of context capacity`,
+        `Breakdown: System (${FastTokenizer.formatTokenCount(systemRulesTokens)}), MCP (${FastTokenizer.formatTokenCount(skillsMcpTokens)}), Messages (${FastTokenizer.formatTokenCount(messagesTokens)}), Tool Outputs (${FastTokenizer.formatTokenCount(toolOutputsTokens)})`,
       ],
     });
 
@@ -306,7 +306,7 @@ export class LogWatcher {
 
     const snapshot: ContextUsageSnapshot = {
       conversationId: convId,
-      conversationTitle: convTitle || `会话 ${convId.slice(0, 8)}`,
+      conversationTitle: convTitle || `Session ${convId.slice(0, 8)}`,
       source,
       lastUpdated: new Date().toLocaleTimeString(),
       modelName,
@@ -322,7 +322,7 @@ export class LogWatcher {
       recentObjectives,
       modifiedFiles,
       recentDecisions: [
-        `会话交互已达 ${turnCount} 轮，占用 ${percentage}% 上下文空间`,
+        `Session has ${turnCount} turn(s), using ${percentage}% of context capacity`,
       ],
       migrationPrompt,
       availableConversations,

@@ -179,23 +179,23 @@ var TopConsumersAnalyzer = class {
       let details = "";
       if (ev.type === "tool_output") {
         if (ev.name.includes("view_file")) {
-          displayName = `\u{1F4C4} \u67E5\u770B\u6587\u4EF6\u5185\u5BB9 (${ev.name.split(":")[1]?.trim() || "file"})`;
+          displayName = `\u{1F4C4} View File (${ev.name.split(":")[1]?.trim() || "file"})`;
         } else if (ev.name.includes("run_command")) {
-          displayName = `\u{1F5A5}\uFE0F \u7EC8\u7AEF\u6267\u884C\u8F93\u51FA (${ev.name.split(":")[1]?.trim() || "command"})`;
+          displayName = `\u{1F5A5}\uFE0F Command Output (${ev.name.split(":")[1]?.trim() || "command"})`;
         } else if (ev.name.includes("grep_search") || ev.name.includes("list_dir")) {
-          displayName = `\u{1F50D} \u4EE3\u7801\u68C0\u7D22\u7ED3\u679C (${ev.name})`;
+          displayName = `\u{1F50D} Search Result (${ev.name})`;
         } else {
-          displayName = `\u2699\uFE0F \u5DE5\u5177\u8F93\u51FA: ${ev.name}`;
+          displayName = `\u2699\uFE0F Tool Output: ${ev.name}`;
         }
         details = ev.rawContent.slice(0, 150).replace(/\s+/g, " ");
       } else if (ev.type === "system_rules") {
-        displayName = `\u{1F3DB}\uFE0F \u5168\u5C40\u7CFB\u7EDF\u89C4\u5219\u4E0E\u6280\u80FD\u6307\u4EE4 (${ev.name})`;
-        details = "\u7CFB\u7EDF\u7EA7 Prompt\u3001GEMINI.md \u4E0E\u5185\u7F6E Agent \u6307\u4EE4";
+        displayName = `\u{1F3DB}\uFE0F System Rules & Skills (${ev.name})`;
+        details = "System prompt, GEMINI.md, and built-in agent instructions";
       } else if (ev.type === "mcp_schema") {
-        displayName = `\u{1F50C} MCP \u670D\u52A1\u5DE5\u5177 Schema (${ev.name})`;
-        details = "\u6CE8\u518C\u7684\u5916\u90E8 MCP \u534F\u8BAE\u5DE5\u5177\u5B9A\u4E49";
+        displayName = `\u{1F50C} MCP Tool Schema (${ev.name})`;
+        details = "Registered external MCP tool definitions";
       } else if (ev.type === "user_input") {
-        displayName = `\u{1F4AC} \u7528\u6237\u8F93\u5165\u6D88\u606F (Step #${ev.stepIndex})`;
+        displayName = `\u{1F4AC} User Input (Step #${ev.stepIndex})`;
         details = ev.rawContent.slice(0, 150).replace(/\s+/g, " ");
       }
       scoredList.push({
@@ -221,24 +221,24 @@ var ContextSummarizer = class {
    */
   static generateMigrationPrompt(params) {
     const { projectName, modelName, totalTokens, userObjectives, modifiedFiles, recentDecisions } = params;
-    const prompt = `# \u9879\u76EE\u65E0\u7F1D\u63A5\u7EED\u4E0A\u4E0B\u6587 (Context Migration Prompt)
+    const prompt = `# Context Migration Prompt
 
-> \u672C\u6458\u8981\u7531 **Antigravity Context Meter** \u81EA\u52A8\u63D0\u70BC\u3002
-> **\u524D\u7F6E\u4F1A\u8BDD\u7528\u91CF**\uFF1A~${totalTokens} Tokens | **\u57FA\u51C6\u6A21\u578B**\uFF1A${modelName}
+> Automatically distilled by **Antigravity Context Meter**.
+> **Previous Session Usage**: ~${totalTokens} Tokens | **Model**: ${modelName}
 
 ---
 
-## \u{1F3AF} \u6838\u5FC3\u76EE\u6807\u4E0E\u9700\u6C42\u80CC\u666F
-${userObjectives.length > 0 ? userObjectives.map((obj, i) => `${i + 1}. ${obj}`).join("\n") : "1. \u7EE7\u7EED\u63A8\u8FDB\u5F53\u524D\u9879\u76EE\u7684\u6838\u5FC3\u529F\u80FD\u4E0E\u67B6\u6784\u5B9E\u65BD\u3002"}
+## \u{1F3AF} Core Objectives & Background
+${userObjectives.length > 0 ? userObjectives.map((obj, i) => `${i + 1}. ${obj}`).join("\n") : "1. Continue working on the core features and architecture of the current project."}
 
-## \u{1F4DD} \u5DF2\u786E\u8BA4\u7684\u5173\u952E\u6280\u672F\u51B3\u7B56\u4E0E\u8BBE\u8BA1
-${recentDecisions.length > 0 ? recentDecisions.map((dec, i) => `- ${dec}`).join("\n") : "- \u5DF2\u5EFA\u7ACB\u9879\u76EE\u6838\u5FC3\u5BAA\u6CD5\u4E0E\u5206\u9636\u6BB5\u5F00\u53D1\u89C4\u5212\u3002\n- \u5DF2\u786E\u7ACB\u6838\u5FC3\u67B6\u6784\u4E0E\u63A5\u53E3\u5951\u7EA6\u89C4\u8303\u3002"}
+## \u{1F4DD} Key Technical Decisions & Design
+${recentDecisions.length > 0 ? recentDecisions.map((dec) => `- ${dec}`).join("\n") : "- Core architecture and staged development plan are established."}
 
-## \u{1F4C1} \u6D89\u53CA\u7684\u6838\u5FC3\u6587\u4EF6\u4E0E\u4EE3\u7801\u8D44\u4EA7
-${modifiedFiles.length > 0 ? modifiedFiles.map((f) => `- \`${f}\``).join("\n") : "- \u6682\u65E0\u6216\u76F4\u63A5\u57FA\u4E8E\u5F53\u524D\u5DE5\u4F5C\u533A\u6587\u4EF6\u7EE7\u7EED\u3002"}
+## \u{1F4C1} Relevant Files & Code Assets
+${modifiedFiles.length > 0 ? modifiedFiles.map((f) => `- \`${f}\``).join("\n") : "- Continue directly from the current workspace files."}
 
-## \u{1F680} \u63A5\u4E0B\u6765\u8981\u505A\u7684\u4E8B\u60C5
-\u8BF7\u8BFB\u53D6\u4EE5\u4E0A\u80CC\u666F\u4E0E\u5F53\u524D\u5DE5\u4F5C\u533A\uFF0C\u65E0\u9700\u91CD\u65B0\u89E3\u91CA\u67B6\u6784\uFF0C\u76F4\u63A5\u65E0\u7F1D\u7EE7\u7EED\u63A8\u8FDB\u4E0B\u4E00\u6B65\u5177\u4F53\u4EFB\u52A1\uFF01
+## \u{1F680} Next Steps
+Please review the context above and the current workspace, skip re-explaining the architecture, and seamlessly continue with the next concrete task.
 `;
     return prompt;
   }
@@ -260,12 +260,12 @@ var LogWatcher = class {
       {
         path: path.join(home, ".gemini", "antigravity", "brain"),
         source: "desktop",
-        label: "\u684C\u9762\u7AEF"
+        label: "Desktop"
       },
       {
         path: path.join(home, ".gemini", "antigravity-ide", "brain"),
         source: "ide",
-        label: "IDE\u7AEF"
+        label: "IDE"
       }
     ];
   }
@@ -300,7 +300,7 @@ var LogWatcher = class {
                 id: dir,
                 source: base.source,
                 sourceLabel: base.label,
-                title: title || `\u4F1A\u8BDD ${dir.slice(0, 8)}`,
+                title: title || `Session ${dir.slice(0, 8)}`,
                 lastModified: logStat.mtimeMs,
                 lastUpdatedStr: new Date(logStat.mtimeMs).toLocaleTimeString(),
                 logPath
@@ -343,7 +343,7 @@ var LogWatcher = class {
       }
     } catch {
     }
-    return "\u672A\u547D\u540D\u4F1A\u8BDD";
+    return "Untitled Session";
   }
   /**
    * 探测当前应聚焦的目标会话
@@ -423,7 +423,7 @@ var LogWatcher = class {
             id: `user_${stepIndex}`,
             stepIndex,
             type: "user_input",
-            name: `\u7528\u6237\u63D0\u95EE (\u8F6E\u6B21 #${turnCount})`,
+            name: `User Prompt (Turn #${turnCount})`,
             rawContent: contentStr,
             timestamp: time
           });
@@ -463,7 +463,7 @@ var LogWatcher = class {
             id: `tool_${stepIndex}`,
             stepIndex,
             type: "tool_output",
-            name: `\u5DE5\u5177\u8F93\u51FA (${type})`,
+            name: `${type}`,
             rawContent: contentStr,
             timestamp: time
           });
@@ -488,20 +488,20 @@ var LogWatcher = class {
     const modifiedFiles = Array.from(modifiedFilesSet).slice(-8);
     const recentObjectives = userObjectives.slice(-3);
     const migrationPrompt = ContextSummarizer.generateMigrationPrompt({
-      projectName: convTitle || "\u5F53\u524D\u9879\u76EE",
+      projectName: convTitle || "Current Project",
       modelName: spec.displayName,
       totalTokens: FastTokenizer.formatTokenCount(totalUsed),
       userObjectives: recentObjectives,
       modifiedFiles,
       recentDecisions: [
-        `\u4F1A\u8BDD\u5DF2\u4EA4\u4E92 ${turnCount} \u8F6E\uFF0C\u7D2F\u8BA1\u5360\u7528 ${percentage}% \u4E0A\u4E0B\u6587\u7A7A\u95F4`,
-        `\u5206\u5E03: System (${FastTokenizer.formatTokenCount(systemRulesTokens)}), MCP (${FastTokenizer.formatTokenCount(skillsMcpTokens)}), Messages (${FastTokenizer.formatTokenCount(messagesTokens)}), Tool Outputs (${FastTokenizer.formatTokenCount(toolOutputsTokens)})`
+        `Session has ${turnCount} turn(s), using ${percentage}% of context capacity`,
+        `Breakdown: System (${FastTokenizer.formatTokenCount(systemRulesTokens)}), MCP (${FastTokenizer.formatTokenCount(skillsMcpTokens)}), Messages (${FastTokenizer.formatTokenCount(messagesTokens)}), Tool Outputs (${FastTokenizer.formatTokenCount(toolOutputsTokens)})`
       ]
     });
     const availableConversations = this.listRecentConversations(10);
     const snapshot = {
       conversationId: convId,
-      conversationTitle: convTitle || `\u4F1A\u8BDD ${convId.slice(0, 8)}`,
+      conversationTitle: convTitle || `Session ${convId.slice(0, 8)}`,
       source,
       lastUpdated: (/* @__PURE__ */ new Date()).toLocaleTimeString(),
       modelName,
@@ -517,7 +517,7 @@ var LogWatcher = class {
       recentObjectives,
       modifiedFiles,
       recentDecisions: [
-        `\u4F1A\u8BDD\u4EA4\u4E92\u5DF2\u8FBE ${turnCount} \u8F6E\uFF0C\u5360\u7528 ${percentage}% \u4E0A\u4E0B\u6587\u7A7A\u95F4`
+        `Session has ${turnCount} turn(s), using ${percentage}% of context capacity`
       ],
       migrationPrompt,
       availableConversations
@@ -683,9 +683,9 @@ var server = http.createServer((req, res) => {
 });
 server.listen(PORT, "127.0.0.1", () => {
   console.log(`====================================================`);
-  console.log(`\u{1F680} Antigravity Context Meter \u6570\u636E\u6D41\u670D\u52A1\u5DF2\u5C31\u7EEA\uFF01`);
-  console.log(`\u{1F449} \u60AC\u6D6E\u80F6\u56CA\u754C\u9762: http://127.0.0.1:${PORT}/capsule`);
-  console.log(`\u{1F449} \u5B8C\u6574\u9762\u677F\u754C\u9762: http://127.0.0.1:${PORT}`);
+  console.log(`\u{1F680} Antigravity Context Meter server is ready!`);
+  console.log(`\u{1F449} Floating Capsule UI: http://127.0.0.1:${PORT}/capsule`);
+  console.log(`\u{1F449} Full Panel UI:       http://127.0.0.1:${PORT}`);
   console.log(`====================================================`);
 });
 //# sourceMappingURL=desktop.js.map

@@ -33,23 +33,23 @@ export class TopConsumersAnalyzer {
 
       if (ev.type === 'tool_output') {
         if (ev.name.includes('view_file')) {
-          displayName = `📄 查看文件内容 (${ev.name.split(':')[1]?.trim() || 'file'})`;
+          displayName = `📄 View File (${ev.name.split(':')[1]?.trim() || 'file'})`;
         } else if (ev.name.includes('run_command')) {
-          displayName = `🖥️ 终端执行输出 (${ev.name.split(':')[1]?.trim() || 'command'})`;
+          displayName = `🖥️ Command Output (${ev.name.split(':')[1]?.trim() || 'command'})`;
         } else if (ev.name.includes('grep_search') || ev.name.includes('list_dir')) {
-          displayName = `🔍 代码检索结果 (${ev.name})`;
+          displayName = `🔍 Search Result (${ev.name})`;
         } else {
-          displayName = `⚙️ 工具输出: ${ev.name}`;
+          displayName = `⚙️ Tool Output: ${ev.name}`;
         }
         details = ev.rawContent.slice(0, 150).replace(/\s+/g, ' ');
       } else if (ev.type === 'system_rules') {
-        displayName = `🏛️ 全局系统规则与技能指令 (${ev.name})`;
-        details = '系统级 Prompt、GEMINI.md 与内置 Agent 指令';
+        displayName = `🏛️ System Rules & Skills (${ev.name})`;
+        details = 'System prompt, GEMINI.md, and built-in agent instructions';
       } else if (ev.type === 'mcp_schema') {
-        displayName = `🔌 MCP 服务工具 Schema (${ev.name})`;
-        details = '注册的外部 MCP 协议工具定义';
+        displayName = `🔌 MCP Tool Schema (${ev.name})`;
+        details = 'Registered external MCP tool definitions';
       } else if (ev.type === 'user_input') {
-        displayName = `💬 用户输入消息 (Step #${ev.stepIndex})`;
+        displayName = `💬 User Input (Step #${ev.stepIndex})`;
         details = ev.rawContent.slice(0, 150).replace(/\s+/g, ' ');
       }
 

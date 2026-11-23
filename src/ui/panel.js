@@ -22,9 +22,10 @@ function renderSnapshot(snapshot) {
   if (!snapshot) return;
   currentSnapshot = snapshot;
 
-  // 1. 顶部基础信息
+  // 1. Header info
   document.getElementById('model-badge').innerText = snapshot.modelDisplayName || snapshot.modelName || 'Gemini Flash';
-  document.getElementById('turn-badge').innerText = `${snapshot.turnCount || 0} 轮交互`;
+  const turns = snapshot.turnCount || 0;
+  document.getElementById('turn-badge').innerText = `${turns} ${turns === 1 ? 'turn' : 'turns'}`;
 
   // 2. 核心百分比与总数
   const percentEl = document.getElementById('percent-val');
@@ -67,7 +68,7 @@ function renderSnapshot(snapshot) {
   if (!snapshot.topConsumers || snapshot.topConsumers.length === 0) {
     topListEl.innerHTML = `
       <div class="ag-top-item" style="color: var(--text-muted); justify-content: center;">
-        当前会话无大文件或长日志消耗
+        No large files or long outputs in this session yet
       </div>
     `;
   } else {
@@ -92,40 +93,40 @@ function showToast(msg) {
   }, 2200);
 }
 
-// 绑定一键提炼迁移 Prompt 按钮
+// Bind 1-click migration prompt button
 document.getElementById('btn-migrate').addEventListener('click', () => {
   if (vscode) {
     vscode.postMessage({ command: 'requestMigrationPrompt' });
   } else if (currentSnapshot && currentSnapshot.migrationPrompt) {
     navigator.clipboard.writeText(currentSnapshot.migrationPrompt).then(() => {
-      showToast('已复制结构化迁移 Prompt 到剪贴板！');
+      showToast('Migration prompt copied to clipboard!');
     });
   } else {
-    // 默认兜底
-    const defaultSummary = `# 项目无缝接续上下文 (Context Migration Prompt)
+    // Fallback
+    const defaultSummary = `# Context Migration Prompt
 
-> 由 Antigravity Context Meter 自动提炼生成。
+> Automatically distilled by Antigravity Context Meter.
 
-## 🎯 核心目标
-继续推进当前工作区的核心功能与代码实现。
+## 🎯 Core Objectives
+Continue implementing the core features and architecture in the current workspace.
 
-## 🚀 接下来要做的事情
-请读取当前工作区最新代码，无需重新解释架构，直接无缝继续推进下一步具体任务！
+## 🚀 Next Steps
+Please review the current workspace code, skip re-explaining the architecture, and seamlessly continue with the next concrete task.
 `;
     navigator.clipboard.writeText(defaultSummary).then(() => {
-      showToast('已复制结构化迁移 Prompt 到剪贴板！');
+      showToast('Migration prompt copied to clipboard!');
     });
   }
 });
 
-// 监听来自 VS Code 插件或 WebSocket 的实时数据更新
+// Listen for real-time updates from VS Code extension or WebSocket
 window.addEventListener('message', (event) => {
   const message = event.data;
   if (message.type === 'UPDATE_SNAPSHOT') {
     renderSnapshot(message.payload);
   } else if (message.type === 'MIGRATION_PROMPT_READY') {
     navigator.clipboard.writeText(message.payload).then(() => {
-      showToast('已复制结构化迁移 Prompt 到剪贴板！');
+      showToast('Migration prompt copied to clipboard!');
     });
   }
 });

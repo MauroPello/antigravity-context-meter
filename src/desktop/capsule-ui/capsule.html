@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -322,31 +322,31 @@
   </style>
 </head>
 <body>
-  <!-- 极简胶囊 -->
-  <div class="capsule-pill" id="pill-btn" title="点击展开/收起，按住任意拖动位置">
+  <!-- Mini Capsule -->
+  <div class="capsule-pill" id="pill-btn" title="Click to expand/collapse, hold to drag">
     <svg class="pill-ring" viewBox="0 0 36 36">
       <path class="pill-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
       <path class="pill-ring-fill health-optimal" id="ring-fill" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
     </svg>
     <span class="pill-percent" id="pill-pct">0.0%</span>
     <span class="pill-tokens" id="pill-tok">~0K</span>
-    <span class="pill-tag" id="pill-source">桌面端</span>
+    <span class="pill-tag" id="pill-source">Desktop</span>
   </div>
 
-  <!-- 展开的详情面板 -->
+  <!-- Expanded Detail Card -->
   <div class="detail-card" id="detail-card">
-    <!-- 顶部操作条：下拉菜单 + 醒目红色圆叉关闭按钮 -->
+    <!-- Top bar: session selector + close button -->
     <div class="top-bar-row">
       <div class="select-wrapper">
         <select class="session-select" id="session-select">
-          <option value="auto">⚡ 自动跟随最新活动项目</option>
+          <option value="auto">⚡ Auto-follow latest active session</option>
         </select>
       </div>
-      <div class="btn-red-quit" id="btn-quit" title="退出关闭悬浮窗">✕</div>
+      <div class="btn-red-quit" id="btn-quit" title="Quit floating capsule">✕</div>
     </div>
 
-    <div class="card-header" id="card-drag-bar" title="按住可拖动窗口">
-      <span class="card-title" id="card-title">当前项目</span>
+    <div class="card-header" id="card-drag-bar" title="Hold to drag window">
+      <span class="card-title" id="card-title">Current Session</span>
       <span class="card-model" id="card-model">Gemini Flash</span>
     </div>
 
@@ -355,7 +355,7 @@
       <span style="font-size: 11px; color: var(--text-muted);"><strong id="card-used" style="color: #fff;">0</strong> / <span id="card-max">1M</span></span>
     </div>
 
-    <!-- 分段条 -->
+    <!-- Breakdown bar -->
     <div class="card-track">
       <div class="seg seg-rules" id="seg-rules" style="width: 0%"></div>
       <div class="seg seg-mcp" id="seg-mcp" style="width: 0%"></div>
@@ -363,7 +363,7 @@
       <div class="seg seg-out" id="seg-out" style="width: 0%"></div>
     </div>
 
-    <!-- 图例 -->
+    <!-- Legend -->
     <div class="card-grid">
       <div class="grid-item"><span>🟣 Rules</span><span class="grid-val" id="g-rules">0</span></div>
       <div class="grid-item"><span>🔵 MCP</span><span class="grid-val" id="g-mcp">0</span></div>
@@ -371,11 +371,11 @@
       <div class="grid-item"><span>🟡 Outputs</span><span class="grid-val" id="g-out">0</span></div>
     </div>
 
-    <!-- Top 消耗 -->
-    <div class="top-section-title">🔥 Top 消耗溯源</div>
+    <!-- Top Consumers -->
+    <div class="top-section-title">🔥 Top Consumers</div>
     <div id="top-box"></div>
 
-    <button class="btn-copy" id="btn-copy">⚡ 一键提炼新会话 Prompt</button>
+    <button class="btn-copy" id="btn-copy">⚡ 1-Click Distill New Session Prompt</button>
   </div>
 
   <script>
@@ -445,9 +445,9 @@
     function updateSessionOptions(convs, activeId) {
       if (!convs || convs.length === 0) return;
       
-      let html = '<option value="auto">⚡ 自动跟随最新活动项目</option>';
+      let html = '<option value="auto">⚡ Auto-follow latest active session</option>';
       for (const c of convs) {
-        const icon = c.source === 'desktop' ? '💻 [桌面端]' : '🛠️ [IDE端]';
+        const icon = c.source === 'desktop' ? '💻 [Desktop]' : '🛠️ [IDE]';
         const isSelected = selectedConvId === c.id ? 'selected' : '';
         html += `<option value="${c.id}" ${isSelected}>${icon} ${c.title} (${c.lastUpdatedStr})</option>`;
       }
@@ -459,17 +459,17 @@
       if (!snap) return;
       currentSnap = snap;
 
-      // 胶囊更新
+      // Update capsule pill
       document.getElementById('pill-pct').innerText = snap.percentage.toFixed(1) + '%';
       document.getElementById('pill-tok').innerText = `~${formatK(snap.usedTokens)}`;
-      document.getElementById('pill-source').innerText = snap.source === 'desktop' ? '桌面端' : 'IDE端';
+      document.getElementById('pill-source').innerText = snap.source === 'desktop' ? 'Desktop' : 'IDE';
 
       const ring = document.getElementById('ring-fill');
       ring.setAttribute('stroke-dasharray', `${snap.percentage}, 100`);
       ring.className = `pill-ring-fill health-${snap.healthLevel}`;
 
-      // 面板更新
-      document.getElementById('card-title').innerText = snap.conversationTitle || '当前项目';
+      // Update expanded panel
+      document.getElementById('card-title').innerText = snap.conversationTitle || 'Current Session';
       document.getElementById('card-model').innerText = snap.modelDisplayName || 'Gemini Flash';
       const cardPct = document.getElementById('card-pct');
       cardPct.innerText = snap.percentage.toFixed(1) + '%';
@@ -490,15 +490,15 @@
       document.getElementById('g-msg').innerText = formatK(b.messagesTokens);
       document.getElementById('g-out').innerText = formatK(b.toolOutputsTokens);
 
-      // 下拉菜单更新
+      // Update session dropdown
       if (snap.availableConversations) {
         updateSessionOptions(snap.availableConversations, snap.conversationId);
       }
 
-      // Top 消耗
+      // Top consumers
       const topBox = document.getElementById('top-box');
       if (!snap.topConsumers || snap.topConsumers.length === 0) {
-        topBox.innerHTML = '<div style="font-size:10px; color:var(--text-muted); text-align:center; padding:4px;">暂无大开销</div>';
+        topBox.innerHTML = '<div style="font-size:10px; color:var(--text-muted); text-align:center; padding:4px;">No large consumers yet</div>';
       } else {
         topBox.innerHTML = snap.topConsumers.slice(0, 3).map((item, i) => `
           <div class="top-item-row">
@@ -513,8 +513,8 @@
       if (currentSnap && currentSnap.migrationPrompt) {
         navigator.clipboard.writeText(currentSnap.migrationPrompt).then(() => {
           const btn = document.getElementById('btn-copy');
-          btn.innerText = '✅ 已复制迁移 Prompt 到剪贴板！';
-          setTimeout(() => { btn.innerText = '⚡ 一键提炼新会话 Prompt'; }, 2000);
+          btn.innerText = '✅ Migration prompt copied to clipboard!';
+          setTimeout(() => { btn.innerText = '⚡ 1-Click Distill New Session Prompt'; }, 2000);
         });
       }
     });

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
         <span class="ag-title">Context Usage</span>
         <span class="ag-model-badge" id="model-badge">Gemini Flash (1M)</span>
       </div>
-      <span class="ag-turn-badge" id="turn-badge">0 轮对话</span>
+      <span class="ag-turn-badge" id="turn-badge">0 turns</span>
     </div>
 
     <!-- 核心统计大字 -->
@@ -72,26 +72,26 @@
 
     <div class="ag-section-divider"></div>
 
-    <!-- Top 消耗溯源 -->
+    <!-- Top Consumers -->
     <div class="ag-section-title">
-      <span>🔥 Top 消耗溯源 (Top Consumers)</span>
-      <span style="font-size: 10px; color: var(--text-muted);">按占用排序</span>
+      <span>🔥 Top Consumers</span>
+      <span style="font-size: 10px; color: var(--text-muted);">Sorted by usage</span>
     </div>
 
     <div class="ag-top-list" id="top-consumers-list">
       <div class="ag-top-item" style="color: var(--text-muted); justify-content: center;">
-        正在分析当前会话操作...
+        Analyzing current session activity...
       </div>
     </div>
 
-    <!-- 底部一键提炼迁移操作 -->
+    <!-- Bottom 1-click migration prompt action -->
     <button class="ag-action-btn" id="btn-migrate">
       <span>⚡</span>
-      <span>一键提炼新会话 Prompt (0 遗忘迁移)</span>
+      <span>1-Click Distill New Session Prompt</span>
     </button>
   </div>
 
-  <div class="ag-toast" id="ag-toast">已复制结构化迁移 Prompt 到剪贴板！</div>
+  <div class="ag-toast" id="ag-toast">Migration prompt copied to clipboard!</div>
 
   <script src="panel.js"></script>
 </body>

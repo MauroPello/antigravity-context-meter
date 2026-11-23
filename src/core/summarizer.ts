@@ -16,36 +16,36 @@ export class ContextSummarizer {
   }): string {
     const { projectName, modelName, totalTokens, userObjectives, modifiedFiles, recentDecisions } = params;
 
-    const prompt = `# 项目无缝接续上下文 (Context Migration Prompt)
+    const prompt = `# Context Migration Prompt
 
-> 本摘要由 **Antigravity Context Meter** 自动提炼。
-> **前置会话用量**：~${totalTokens} Tokens | **基准模型**：${modelName}
+> Automatically distilled by **Antigravity Context Meter**.
+> **Previous Session Usage**: ~${totalTokens} Tokens | **Model**: ${modelName}
 
 ---
 
-## 🎯 核心目标与需求背景
+## 🎯 Core Objectives & Background
 ${
   userObjectives.length > 0
     ? userObjectives.map((obj, i) => `${i + 1}. ${obj}`).join('\n')
-    : '1. 继续推进当前项目的核心功能与架构实施。'
+    : '1. Continue working on the core features and architecture of the current project.'
 }
 
-## 📝 已确认的关键技术决策与设计
+## 📝 Key Technical Decisions & Design
 ${
   recentDecisions.length > 0
-    ? recentDecisions.map((dec, i) => `- ${dec}`).join('\n')
-    : '- 已建立项目核心宪法与分阶段开发规划。\n- 已确立核心架构与接口契约规范。'
+    ? recentDecisions.map((dec) => `- ${dec}`).join('\n')
+    : '- Core architecture and staged development plan are established.'
 }
 
-## 📁 涉及的核心文件与代码资产
+## 📁 Relevant Files & Code Assets
 ${
   modifiedFiles.length > 0
     ? modifiedFiles.map((f) => `- \`${f}\``).join('\n')
-    : '- 暂无或直接基于当前工作区文件继续。'
+    : '- Continue directly from the current workspace files.'
 }
 
-## 🚀 接下来要做的事情
-请读取以上背景与当前工作区，无需重新解释架构，直接无缝继续推进下一步具体任务！
+## 🚀 Next Steps
+Please review the context above and the current workspace, skip re-explaining the architecture, and seamlessly continue with the next concrete task.
 `;
 
     return prompt;

@@ -104,16 +104,36 @@ Choose the mode that fits your workflow:
 
 ### Option A: Standalone macOS Floating Capsule
 
+> **What's new in this fork (`MauroPello/antigravity-context-meter`)**:
+> - **Full English UI**: Translated floating capsule HUD, web panel, top consumers labels, 1-click migration prompt, and launcher scripts.
+> - **Auto-start & Auto-close with Antigravity Desktop (macOS)**: Optional `LaunchAgent` that automatically opens the capsule when Antigravity Desktop launches and closes it when you quit Antigravity (while respecting manual `✕` dismissal during an active session).
+> - **Startup reliability**: Detached background server with a readiness check and automatic Node.js discovery (supports `PATH`, Homebrew, `/usr/local`, and `nvm`).
+
 ```bash
 # 1. Clone this repository
-git clone https://github.com/Dunphil692/antigravity-context-meter.git
+git clone https://github.com/MauroPello/antigravity-context-meter.git
 cd antigravity-context-meter
 
-# 2. Launch the floating capsule (runs in background, top-right of screen)
+# 2. (Optional) Rebuild from source for your Mac architecture
+npm install && npm run bundle && npm run build:capsule
+
+# 3. Launch the floating capsule manually (runs in background, top-right of screen)
 ./start-capsule.sh
 
-# 3. To stop / quit (or click the red [✕] button on the card):
+# 4. To stop / quit (or click the red [✕] button on the card):
 ./stop-capsule.sh
+```
+
+#### Auto-start & Auto-close with Antigravity Desktop (macOS)
+
+To automatically launch the capsule whenever Antigravity Desktop is open and close it when you quit the app (persists across reboots):
+
+```bash
+# Enable auto-start / auto-close via macOS LaunchAgent
+./install-autostart-macos.sh
+
+# Disable and remove the LaunchAgent at any time
+./uninstall-autostart-macos.sh
 ```
 
 ### Option B: Install Extension in Antigravity IDE / VS Code
